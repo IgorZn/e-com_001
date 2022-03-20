@@ -2,11 +2,14 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const connectDB = require('../config/db');
+const cors = require('cors');
 
-const {
-    addProduct,
-    getProducts
-} = require('../controllers/product.controllers');
+
+// Mount routes
+const categories = require('../routers/categories.route');
+const orders = require('../routers/orders.route');
+const products = require('../routers/products.route');
+const users = require('../routers/users.route');
 
 
 // Body parser
@@ -17,7 +20,10 @@ app.use(express.json());
 require('dotenv/config')
 
 
-// Logging middleware
+// Middleware
+app.use(cors())
+app.options('*', cors())
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('tiny'));
 }
@@ -25,11 +31,14 @@ if (process.env.NODE_ENV === 'development') {
 
 // ENV variables
 const api = process.env.API_URL
+const PORT = process.env.PORT
 
 
-// Routes
-app.get(`${api}/products`, getProducts);
-app.post(`${api}/products`, addProduct);
+// Mount routes
+app.use(`${api}/categories`, categories);
+app.use(`${api}/orders`, orders);
+app.use(`${api}/products`, products);
+app.use(`${api}/user`, users);
 
 
 // Connect to DB
@@ -37,7 +46,7 @@ connectDB();
 
 
 // Start server
-app.listen(4000, () => {
+app.listen(PORT, () => {
     console.log(api)
-    console.log('Hello from EXPRESS js, have a look: http://localhost:4000/')
+    console.log(`Hello! Visit me - http://localhost:${PORT}`)
 })

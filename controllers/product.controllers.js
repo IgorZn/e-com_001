@@ -16,7 +16,6 @@ exports.addProduct = async (req, res, next) => {
 };
 
 
-
 // @desc        Get all products
 // @route       GET /api/v1/products
 // @access      Private
@@ -32,6 +31,7 @@ exports.getProducts = async (req, res, next) => {
 
     res.status(201).json({
         success: true,
+        count: product.length,
         data: product
     })
 };
