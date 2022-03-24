@@ -1,4 +1,4 @@
-const asyncHandler = require('../middleware/asyncErrHandler')
+const asyncHandler = require('../middleware/asyncErrHandler');
 
 // Models
 const { Category } = require('../models/category.mongo');
@@ -32,6 +32,37 @@ exports.deleteCategory = asyncHandler(async (req, res, next) => {
     )
 
     res.status(201).json({ success: true, data: {} })
+});
+
+
+// @desc        Get single category
+// @route       GET /api/v1/category/:id
+// @access      Private
+exports.getCategory = asyncHandler(async (req, res, next) => {
+    const category = await Category.findById(req.params.id)
+
+    if (!category) return next(
+        res.status(404).json({ success: false, data: null })
+    )
+
+    res.status(201).json({ success: true, data: category })
+});
+
+
+// @desc        Update single category
+// @route       PUT /api/v1/category/:id
+// @access      Private
+exports.updateCategory = asyncHandler(async (req, res, next) => {
+    const category = await Category.findById(req.params.id)
+
+    if (!category) return next(
+        res.status(404).json({ success: false, data: null })
+    )
+
+    await category.set(req.body)
+    await category.save()
+
+    res.status(201).json({ success: true, data: category })
 });
 
 
