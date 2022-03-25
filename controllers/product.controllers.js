@@ -62,7 +62,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.getProduct = asyncHandler(async (req, res, next) => {
     // .populate() -- отобразит детали объекта, вместо одного ID
-    // и включит его в ответе на ровне с остальными полями модели
+    // и включит его в ответе наравне с остальными полями модели
     const product = await Product.findById(req.params.id)
         .populate('category')
         .catch(e => {
