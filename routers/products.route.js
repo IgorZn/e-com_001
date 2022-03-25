@@ -2,8 +2,12 @@ const express = require('express');
 const {
     getProducts,
     addProduct,
-    getProduct
+    getProduct,
+    updateProduct,
+    deleteProduct
 } = require("../controllers/product.controllers");
+
+const idChecker = require("../middleware/misc.middleware");
 
 const router = express.Router();
 
@@ -12,6 +16,8 @@ router.route('/')
     .post(addProduct)
 
 router.route('/:id')
-    .get(getProduct)
+    .get(idChecker, getProduct)
+    .put(idChecker, updateProduct)
+    .delete(idChecker, deleteProduct)
 
 module.exports = router;
