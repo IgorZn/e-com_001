@@ -4,7 +4,8 @@ const {
     addProduct,
     getProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getFeatured
 } = require("../controllers/product.controllers");
 
 const idChecker = require("../middleware/misc.middleware");
@@ -14,6 +15,9 @@ const router = express.Router();
 router.route('/')
     .get(getProducts)
     .post(addProduct)
+
+router.route('/get/featured/:count')
+    .get(getFeatured)
 
 router.route('/:id')
     .get(idChecker, getProduct)

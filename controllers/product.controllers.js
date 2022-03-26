@@ -73,6 +73,26 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
 });
 
 
+// @desc        Get all featured
+// @route       GET /api/v1/products/get/featured
+// @access      Private
+exports.getFeatured = asyncHandler(async (req, res, next) => {
+    // +count -- преобразует в число из строки
+    const count = req.params.count ? req.params.count : 0
+
+    // .populate() -- отобразит детали объекта, вместо одного ID
+    // и включит его в ответе наравне с остальными полями модели
+    const featured = await Product.find({ isFeatured: true })
+        .populate('category')
+        .limit(+count)
+        .catch(e => {
+            return res.status(404).json({ success: false, data: e.name })
+    });
+
+    res.status(201).json({ success: true, data: featured });
+});
+
+
 // @desc        Update single product
 // @route       PUT /api/v1/products/:id
 // @access      Private

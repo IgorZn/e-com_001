@@ -1,7 +1,7 @@
 const asyncHandler = require('../middleware/asyncErrHandler.middleware');
 
 // Models
-const { Category } = require('../models/category.mongo');
+const Category = require('../models/category.mongo');
 
 
 // @desc        Add category
