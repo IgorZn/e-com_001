@@ -40,14 +40,19 @@ exports.addProduct = asyncHandler(async (req, res, next) => {
 // @route       GET /api/v1/products
 // @access      Private
 exports.getProducts = asyncHandler(async (req, res, next) => {
+    let filer = {};
 
-    const product = await Product.find();
+    if (req.query.categories) {
+        filer = { category: req.query.categories.split(',') }
+    }
+
+    const product = await Product.find(filer);
 
     if(!product) {
         res.status(404).json({
             success: false
         })
-    }
+    };
 
     res.status(201).json({
         success: true,
