@@ -38,7 +38,7 @@ const PORT = process.env.PORT
 app.use(`${api}/categories`, categories);
 app.use(`${api}/orders`, orders);
 app.use(`${api}/products`, products);
-app.use(`${api}/user`, users);
+app.use(`${api}/users`, users);
 
 
 // Connect to DB

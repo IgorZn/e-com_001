@@ -1,11 +1,14 @@
+const asyncHandler = require('../middleware/asyncErrHandler.middleware');
+
 // Models
-const { Users } = require('../models/user.mongo');
+const Users = require('../models/user.mongo');
 
 
 // @desc        Add user
-// @route       POST /api/v1/user
+// @route       POST /api/v1/users
 // @access      Private
-exports.addUser = async (req, res, next) => {
+exports.addUser = asyncHandler(async (req, res, next) => {
+    // ToDo: проверку на дубликаты почты и/или почты
 
     const user = await Users.create(req.body);
 
@@ -13,7 +16,7 @@ exports.addUser = async (req, res, next) => {
         success: true,
         data: user
     });
-};
+});
 
 
 // @desc        Get all user
