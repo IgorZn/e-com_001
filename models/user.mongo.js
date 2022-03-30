@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -50,5 +51,14 @@ userSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
+// Encrypt user password
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('passwordHash')) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+
+})
 
 module.exports = mongoose.model('User', userSchema);
