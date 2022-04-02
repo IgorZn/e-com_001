@@ -52,3 +52,9 @@ app.listen(PORT, () => {
     console.log(api)
     console.log(`Hello! Visit me - http://localhost:${PORT}`)
 })
+
+process.on('unhandledRejection', (err, promose) => {
+    console.log(`Err: ${err.message}`)
+    // Exit
+    server.close( () => process.exit(1))
+});

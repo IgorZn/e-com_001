@@ -3,6 +3,7 @@ const ErrorResponse = require('../utils/errResponse');
 
 const bcrypt = require('bcryptjs');
 const Users = require('../models/user.mongo');
+const { sendTokenResponse } = require("../utils/tokenHelpers.utils");
 
 
 // @desc        Login user
@@ -26,13 +27,13 @@ exports.login = asyncHandler( async (req, res, next) => {
 
     // Check if password
     // const isMatch = await user.matchPassword(password);
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
 
 
     if (!isMatch) {
         return next( new ErrorResponse('Invalid credentials', 400));
     };
 
-    // sendTokenResponse(user, 200, res);
-    res.status(200).json({ success: true, token: 'token()' });
+    sendTokenResponse(user, 200, res);
+    // res.status(200).json({ success: true, token: 'token()' });
 });

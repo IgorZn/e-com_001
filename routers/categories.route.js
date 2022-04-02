@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { protect } = require("../middleware/auth.middleware");
 
 const {
     getCategories,
@@ -9,8 +10,9 @@ const {
     updateCategory
 } = require("../controllers/categories.controllers");
 
+
 router.route('/')
-    .get(getCategories)
+    .get(protect, getCategories)
     .post(addCategory)
 
 router
