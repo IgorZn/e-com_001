@@ -10,6 +10,7 @@ const categories = require('../routers/categories.route');
 const orders = require('../routers/orders.route');
 const products = require('../routers/products.route');
 const users = require('../routers/users.route');
+const auth = require('../routers/auth.route');
 
 
 // Body parser
@@ -39,6 +40,7 @@ app.use(`${api}/categories`, categories);
 app.use(`${api}/orders`, orders);
 app.use(`${api}/products`, products);
 app.use(`${api}/users`, users);
+app.use(`${api}/auth`, auth);
 
 
 // Connect to DB
