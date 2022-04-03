@@ -9,7 +9,12 @@ const selectFields = 'name email phone country'
 // @route       POST /api/v1/users
 // @access      Private
 exports.addUser = asyncHandler(async (req, res, next) => {
-    // ToDo: проверку на дубликаты почты и/или почты
+    const { email } = req.body;
+    const result = await Users.findOne({ email: email })
+
+    if (result) {
+        return res.status(404).json({ success: false, data: "User with such email already registered" })
+    }
 
     // Создать ключ passwordHash из password
     req.body.passwordHash = req.body.password

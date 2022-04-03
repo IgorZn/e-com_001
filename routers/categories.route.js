@@ -13,12 +13,12 @@ const {
 
 router.route('/')
     .get(protect, getCategories)
-    .post(addCategory)
+    .post(protect, addCategory)
 
 router
     .route('/:id')
-    .put(updateCategory)
+    .put(protect, updateCategory)
     .get(getCategory)
-    .delete(deleteCategory)
+    .delete(protect, deleteCategory)
 
 module.exports = router;
