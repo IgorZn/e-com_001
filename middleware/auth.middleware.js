@@ -17,7 +17,8 @@ exports.protect = asyncHandler( async (req, res, next) => {
         token = req.headers.authorization.split(' ')[1]; // get token -- [1]
     }
     else if (req.headers.cookie) {
-        token = req.headers.cookie.split('=')[1];
+        token = req.headers.cookie.split('token=')[1];
+        // token = req.headers.cookie.token.split('=')[1];
     }
 
     // Make sure token exist
@@ -41,7 +42,7 @@ exports.protect = asyncHandler( async (req, res, next) => {
 // Grant access to specific role
 exports.authorize = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
+        if (!req.user.isAdmin) {
             return next( new ErrorResponse(`User role ${req.user.role} is NOT unauthorized access to this route`, 403));
         };
         next();

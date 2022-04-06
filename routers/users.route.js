@@ -5,14 +5,17 @@ const {
     getUser
 } = require("../controllers/users.controllers");
 
+const { authorize } = require("../middleware/auth.middleware");
+const { protect } = require("../middleware/auth.middleware");
+
 
 const router = express.Router();
 
 router.route('/')
-    .get(getUsers)
+    .get(protect, authorize(), getUsers)
     .post(addUser)
 
 router.route('/:id')
-    .get(getUser)
+    .get(authorize('isAdmin'), getUser)
 
 module.exports = router;
