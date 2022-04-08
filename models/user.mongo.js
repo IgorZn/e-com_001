@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const mongooseErrHandler = require("../utils/errHandlersMongoose.utils");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -18,9 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
+    role: {
+        type: String,
+        enum: ['user', 'publisher', 'admin'],
+        default: 'user'
     },
     street: {
         type: String,

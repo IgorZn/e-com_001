@@ -1,5 +1,5 @@
 const asyncHandler = require('../middleware/asyncErrHandler.middleware');
-const ErrorResponse = require('../utils/errResponse');
+const ErrorResponse = require('../utils/errResponse.utils');
 const jwt = require("jsonwebtoken");
 const User = require('../models/user.mongo');
 
@@ -42,7 +42,7 @@ exports.protect = asyncHandler( async (req, res, next) => {
 // Grant access to specific role
 exports.authorize = (...roles) => {
     return (req, res, next) => {
-        if (!req.user.isAdmin) {
+        if (!roles.includes(req.user.role)) {
             return next( new ErrorResponse(`User role ${req.user.role} is NOT unauthorized access to this route`, 403));
         };
         next();

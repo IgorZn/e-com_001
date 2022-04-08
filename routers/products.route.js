@@ -9,19 +9,20 @@ const {
 } = require("../controllers/product.controllers");
 
 const idChecker = require("../middleware/misc.middleware");
+const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
 router.route('/')
     .get(getProducts)
-    .post(addProduct)
+    .post(protect, addProduct)
 
 router.route('/get/featured/:count')
     .get(getFeatured)
 
 router.route('/:id')
     .get(idChecker, getProduct)
-    .put(idChecker, updateProduct)
-    .delete(idChecker, deleteProduct)
+    .put(protect, idChecker, authorize('admin'), updateProduct)
+    .delete(protect, idChecker, authorize('admin'), deleteProduct)
 
 module.exports = router;

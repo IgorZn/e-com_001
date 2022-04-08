@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const errHandler = require("../utils/errHandlerExpress.utils");
 const morgan = require('morgan');
 const connectDB = require('../config/db');
 const cors = require('cors');
@@ -18,6 +19,7 @@ const auth = require('../routers/auth.route');
 app.use(express.json());
 
 
+
 // загрузит переменные из .env
 require('dotenv/config')
 
@@ -25,6 +27,7 @@ require('dotenv/config')
 // Middleware
 app.use(cors())
 app.options('*', cors())
+
 
 // Cookie parser
 app.use(cookieParser())
@@ -50,6 +53,8 @@ app.use(`${api}/auth`, auth);
 // Connect to DB
 connectDB();
 
+// Error Handler
+app.use(errHandler)
 
 // Start server
 app.listen(PORT, () => {

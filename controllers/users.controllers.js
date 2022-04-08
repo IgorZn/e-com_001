@@ -2,6 +2,7 @@ const asyncHandler = require('../middleware/asyncErrHandler.middleware');
 
 // Models
 const Users = require('../models/user.mongo');
+const mongooseErrHandler = require("../utils/errHandlersMongoose.utils");
 
 const selectFields = 'name email phone country'
 

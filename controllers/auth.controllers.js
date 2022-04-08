@@ -1,5 +1,5 @@
 const asyncHandler = require('../middleware/asyncErrHandler.middleware');
-const ErrorResponse = require('../utils/errResponse');
+const ErrorResponse = require('../utils/errResponse.utils');
 
 const bcrypt = require('bcryptjs');
 const Users = require('../models/user.mongo');

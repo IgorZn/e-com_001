@@ -12,10 +12,10 @@ const { protect } = require("../middleware/auth.middleware");
 const router = express.Router();
 
 router.route('/')
-    .get(protect, authorize(), getUsers)
+    .get(protect, authorize('user'), getUsers)
     .post(addUser)
 
 router.route('/:id')
-    .get(authorize('isAdmin'), getUser)
+    .get(protect, authorize('admin'), getUser)
 
 module.exports = router;
