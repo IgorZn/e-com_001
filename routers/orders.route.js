@@ -5,10 +5,11 @@ const {
     addOrder,
     getOrders
 } = require("../controllers/orders.controllers");
+const { authorize, protect} = require("../middleware/auth.middleware");
 
 router.route('/')
-    .post(addOrder)
-    .get(getOrders)
+    .post(protect, authorize('user', 'admin'), addOrder)
+    .get(protect, authorize('admin'), getOrders)
 
 
 module.exports = router;

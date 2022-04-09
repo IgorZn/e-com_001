@@ -46,7 +46,10 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
         filer = { category: req.query.categories.split(',') }
     }
 
-    const product = await Product.find(filer);
+    const product = await Product.find(filer).populate({
+        path: 'category',
+        select: 'name icon'
+    });
 
     if(!product) {
         res.status(404).json({

@@ -1,5 +1,5 @@
 // Models
-const { Orders } = require('../models/order.mongo');
+const { Order } = require('../models/order.mongo');
 
 
 // @desc        Add order
@@ -7,11 +7,11 @@ const { Orders } = require('../models/order.mongo');
 // @access      Private
 exports.addOrder = async (req, res, next) => {
 
-    const order = await Orders.create(req.body);
+    const order = await Order.create(req.body);
 
     res.status(201).json({
         success: true,
-        data: order
+        data : order
     });
 };
 
