@@ -1,11 +1,24 @@
 // Models
-const { Order } = require('../models/order.mongo');
+const Order = require('../models/order.mongo');
+const OrderItem = require('../models/order-item.mongo');
 
 
 // @desc        Add order
 // @route       POST /api/v1/orders
 // @access      Private
 exports.addOrder = async (req, res, next) => {
+    const orderItemsIDs = Promise.all(req.body.orderItems.map( async item => {
+        let newOrderItem = new OrderItem({
+            quantity: item.quantity,
+            product: item.product
+        });
+
+        newOrderItem = await newOrderItem.save();
+        return newOrderItem._id;
+    })
+    )
+
+    req.body.orderItems = await orderItemsIDs;
 
     const order = await Order.create(req.body);
 
@@ -21,7 +34,7 @@ exports.addOrder = async (req, res, next) => {
 // @access      Private
 exports.getOrders = async (req, res, next) => {
 
-    const orders = await Orders.find();
+    const orders = await Order.find();
 
     if(!orders) {
         res.status(404).json({
@@ -31,6 +44,7 @@ exports.getOrders = async (req, res, next) => {
 
     res.status(201).json({
         success: true,
+        count: orders.length,
         data: orders
     });
 };

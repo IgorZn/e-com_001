@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const orderSchema = mongoose.Schema({
+const orderSchema = new mongoose.Schema({
     // Множество экземпляров --> []
     orderItems: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'OrderItem',
-        required:true
+        required: true
     }],
     shippingAddress1: {
         type: String,
@@ -48,4 +48,4 @@ const orderSchema = mongoose.Schema({
     },
 })
 
-exports.Order = mongoose.model('Order', orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
