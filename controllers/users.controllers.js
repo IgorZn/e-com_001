@@ -61,3 +61,18 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 
     res.status(201).json({ success: true, data: user })
 });
+
+
+// @desc        Get current logged in user
+// @route       GET /api/v1/auth/me
+// @access      Private
+exports.getMe = asyncHandler( async (req, res, next) => {
+    // "user" -- уже будет в "req" (req.user) после вызова "protected"
+    // в "routes"
+    // const user = await User.find({ email: req.body.email });
+
+    res.status(200).json({
+        success: true,
+        data: req.user
+    })
+});
