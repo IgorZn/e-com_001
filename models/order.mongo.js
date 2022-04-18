@@ -48,4 +48,10 @@ const orderSchema = new mongoose.Schema({
     },
 });
 
+// Cascade delete
+orderSchema.pre('remove', async function (next) {
+    await this.model('OrderItem').deleteMany({ product: this._id })
+    next()
+})
+
 module.exports = mongoose.model('Order', orderSchema);

@@ -1,6 +1,7 @@
 // Models
 const Order = require('../models/order.mongo');
 const OrderItem = require('../models/order-item.mongo');
+const asyncHandler = require("../middleware/asyncErrHandler.middleware");
 
 
 // @desc        Add order
@@ -83,3 +84,43 @@ exports.getSingleOrder = async (req, res, next) => {
         success: true, data: order
     })
 };
+
+
+// @desc        Update order status
+// @route       PUT /api/v1/orders/:id
+// @access      Private
+exports.updateOrder = asyncHandler(async (req, res, next) => {
+    let order = await Order.findById(req.params.id)
+
+    if (!order) return next(
+        res.status(404).json({ success: false, data: null })
+    )
+
+    const { status } = req.body
+
+    // order = Order.findOneAndUpdate(req.params.id, { status: req.body.status }, {
+    //     new: true,
+    //     runValidators: true
+    // });
+
+    await order.set({ status })
+    await order.save()
+
+    res.status(201).json({ success: true, data: order })
+});
+
+
+// @desc        Delete order
+// @route       DELETE /api/v1/orders/:id
+// @access      Private
+exports.deleteOrder = asyncHandler(async (req, res, next) => {
+    let order = await Order.findById(req.params.id)
+
+    if (!order) return next(
+        res.status(404).json({ success: false, data: null })
+    )
+
+    await order.remove()
+
+    res.status(201).json({ success: true, data: null })
+});
