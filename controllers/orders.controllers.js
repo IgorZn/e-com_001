@@ -120,7 +120,10 @@ exports.deleteOrder = asyncHandler(async (req, res, next) => {
         res.status(404).json({ success: false, data: null })
     )
 
-    await order.remove()
+    await order.remove().then( items => {
+        // Cascade delete -OrderItem-
+        items.orderItems.forEach( el => OrderItem.findById(el).remove().exec())
+    }).catch(e => { res.status(400).json({ success: false, data: e }) });
 
-    res.status(201).json({ success: true, data: null })
+    res.status(201).json({ success: true, data: null });
 });
