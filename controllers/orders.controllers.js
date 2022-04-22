@@ -8,7 +8,13 @@ const asyncHandler = require("../middleware/asyncErrHandler.middleware");
 // @route       POST /api/v1/orders
 // @access      Private
 exports.addOrder = async (req, res, next) => {
+    /*
+    *  Пройтись по всем элементам корзины, и на их основание
+    *  создать объекты - OrderItem. Все объекты - Promise.
+    *  Дождаться все Promise и отдать их.
+    * */
     const orderItemsIDs = Promise.all(req.body.orderItems.map( async item => {
+
         let newOrderItem = new OrderItem({
             quantity: item.quantity,
             product: item.product
@@ -19,11 +25,30 @@ exports.addOrder = async (req, res, next) => {
     })
     )
 
+    // Assign orderItems to body
     req.body.orderItems = await orderItemsIDs;
+
+    // Calculate total price
+    const totalPrice = Promise.all(req.body.orderItems.map( async orderItemId => {
+        /*
+        *  Аналогично orderItemsIDs, но для цены. Берем orderItems,
+        *  проходимся по всем элементам. Т.к. в orderItemId идет с ID
+        *  то берем его и находим в БД, далее раскручиваем 'product'
+        *  по и берем только цену
+        *  отдать: цена * кол-во = итого
+        * */
+        const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+        const totalPrice = orderItem.product.price * orderItem.quantity;
+        return totalPrice;
+    }))
+
+    // Assign total price
+    req.body.totalPrice = (await totalPrice).reduce( (a, b) => a + b, 0 );
 
     // Assign current logged used ID
     req.body.user = req.user._id;
 
+    // Create new Order
     const order = await Order.create(req.body);
 
     res.status(201).json({
