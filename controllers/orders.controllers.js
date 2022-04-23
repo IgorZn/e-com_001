@@ -152,3 +152,49 @@ exports.deleteOrder = asyncHandler(async (req, res, next) => {
 
     res.status(201).json({ success: true, data: null });
 });
+
+
+// @desc        Get total sales
+// @route       GET /api/v1/orders/total
+// @access      Private
+exports.getTotalSales = async (req, res, next) => {
+
+    const totalSales = await Order.aggregate([
+        { $group: { _id: null, totalsales: { $sum: '$totalPrice'} } }
+    ])
+
+    if (!totalSales) return next(
+        res.status(404).json({ success: false, data: 'The order sales cannot be generated' })
+    )
+
+    const { _id, totalsales } = totalSales.pop()
+
+    res.status(201).json({
+        success: true, count: totalsales
+    })
+};
+
+
+// @desc        Get User orders
+// @route       GET /api/v1/orders/user
+// @access      Private
+exports.getUserOrders = async (req, res, next) => {
+
+    const userOrders = await Order.find({user: req.user})
+        .populate({
+                path: 'orderItems',
+                populate: {
+                    path: 'product',
+                    populate: 'category'
+                }
+            })
+
+    if (!userOrders) return next(
+        res.status(404).json({ success: false, data: 'User has not orders' })
+    )
+
+
+    res.status(201).json({
+        success: true, data: userOrders
+    })
+};
