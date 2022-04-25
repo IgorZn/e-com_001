@@ -12,10 +12,12 @@ const idChecker = require("../middleware/misc.middleware");
 const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
+const uploadOptions = require('../utils/upload.utils')
+
 
 router.route('/')
     .get(getProducts)
-    .post(protect, addProduct)
+    .post(protect, uploadOptions.single('image') ,addProduct)
 
 router.route('/get/featured/:count')
     .get(getFeatured)

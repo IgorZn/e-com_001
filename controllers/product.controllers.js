@@ -9,12 +9,22 @@ const Category = require("../models/category.mongo");
 // @route       POST /api/v1/products
 // @access      Private
 exports.addProduct = asyncHandler(async (req, res, next) => {
+    console.log(req.body)
     if(!Object.keys(req.body).includes('category')) {
         return res.status(400).json({
             status: false,
             error: 'category is mandatory'
         })
     };
+
+    // Image
+    const fileName = req.file.filename
+    const basePath = req.protocol + '://' + req.get('host') + process.env.UPLOAD_PATH
+    const fullPath = basePath + fileName
+
+    // Update image path value
+    req.body.image = fullPath
+
 
     // Validate the category
     await Category.findById(req.body.category)
