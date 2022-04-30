@@ -1,4 +1,6 @@
 const asyncHandler = require('../middleware/asyncErrHandler.middleware');
+const ErrorResponse = require('../utils/errResponse.utils');
+const { fieldsChecker } = require("../utils/reqBody.utils");
 
 // Models
 const Product = require('../models/product.mongo');
@@ -9,12 +11,12 @@ const Category = require("../models/category.mongo");
 // @route       POST /api/v1/products
 // @access      Private
 exports.addProduct = asyncHandler(async (req, res, next) => {
-    console.log(req.body)
-    if(!Object.keys(req.body).includes('category')) {
-        return res.status(400).json({
-            status: false,
-            error: 'category is mandatory'
-        })
+    const FIELDS = ['category']
+    fieldsChecker(req, res, next, FIELDS);
+
+    // Make sure the image is a photo
+    if(!req.file.mimetype.startsWith('image')) {
+        return next(new ErrorResponse(`Please upload an image file`, 400));
     };
 
     // Image

@@ -22,6 +22,7 @@ app.use(express.json());
 
 // загрузит переменные из .env
 require('dotenv/config')
+const path = require("path");
 
 
 // Middleware
@@ -41,6 +42,9 @@ if (process.env.NODE_ENV === 'development') {
 const api = process.env.API_URL
 const PORT = process.env.PORT
 
+// File upload
+console.log('public >>>', path.join(__dirname, '..', 'public'))
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // Mount routes
 app.use(`${api}/categories`, categories);
